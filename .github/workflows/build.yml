@@ -36,7 +36,7 @@ jobs:
           mkdir cdn\windows 2>nul
 
           :: Copy the new DLL in place
-          copy /Y build\Release\selaura_client.dll cdn\windows\
+          copy /Y build\src\client\Release\selaura_client.dll cdn\windows\
 
           cd cdn
 
