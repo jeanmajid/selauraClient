@@ -35,9 +35,10 @@ jobs:
           copy /Y build\Release\*.exe cdn\windows\ >nul 2>&1
           copy /Y build\Release\*.dll cdn\windows\ >nul 2>&1
           cd cdn
-          git add .
-          git commit -m "Upload Windows release binaries from ${{ github.sha }}" || echo No changes to commit
+          git add -A
+          git commit --allow-empty -m "Upload Windows release binaries from ${{ github.sha }}"
           git push
+
 
   build-linux:
     runs-on: ubuntu-latest
