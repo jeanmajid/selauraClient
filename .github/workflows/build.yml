@@ -30,15 +30,14 @@ jobs:
           git config --global user.email "github-actions@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
           git clone https://x-access-token:${{ secrets.CDN_TOKEN }}@github.com/selauraclient/cdn.git cdn
+          rmdir /s /q cdn\windows
           mkdir cdn\windows
-          copy build\Release\*.exe cdn\windows\ >nul 2>&1
-          copy build\Release\*.dll cdn\windows\ >nul 2>&1
+          copy /Y build\Release\*.exe cdn\windows\ >nul 2>&1
+          copy /Y build\Release\*.dll cdn\windows\ >nul 2>&1
           cd cdn
-          git add .
+          git add -A
           git commit -m "Upload Windows release binaries from ${{ github.sha }}" || echo No changes to commit
           git push
-
-
 
   build-linux:
     runs-on: ubuntu-latest
