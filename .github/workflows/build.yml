@@ -27,26 +27,27 @@ jobs:
       - name: Upload Windows Release Binaries
         shell: cmd
         run: |
-          git config --global user.email "github-actions@users.noreply.github.com"
-          git config --global user.name "GitHub Actions"
-          git clone https://x-access-token:${{ secrets.CDN_TOKEN }}@github.com/selauraclient/cdn.git cdn
+          git config --global user.email "%COMMIT_EMAIL%"
+          git config --global user.name "%COMMIT_NAME%"
+          git clone %CDN_REPO% cdn
 
-          rmdir /s /q cdn\windows
-          mkdir cdn\windows
+          :: Ensure clean overwrite
+          del /f /q cdn\windows\selaura_client.dll >nul 2>&1
+          mkdir cdn\windows 2>nul
 
-          :: Delete old binaries to force overwrite
-          del /f /q cdn\windows\*.dll
-          del /f /q cdn\windows\*.exe
-
-          copy /Y build\Release\*.exe cdn\windows\
-          copy /Y build\Release\*.dll cdn\windows\
+          :: Copy the new DLL in place
+          copy /Y build\Release\selaura_client.dll cdn\windows\
 
           cd cdn
-          git add -A
+
+          :: Remove the old version from Git index in case it's unchanged
+          git rm --cached windows\selaura_client.dll >nul 2>&1
+
+          git add windows\selaura_client.dll
+
+          :: Always commit so SHA gets new record even if unchanged
           git commit --allow-empty -m "Upload Windows release binaries from ${{ github.sha }}"
           git push
-
-
 
   build-linux:
     runs-on: ubuntu-latest
