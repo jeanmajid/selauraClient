@@ -35,7 +35,7 @@ jobs:
           copy /Y build\Release\*.exe cdn\windows\ >nul 2>&1
           copy /Y build\Release\*.dll cdn\windows\ >nul 2>&1
           cd cdn
-          git add -A
+          git add .
           git commit -m "Upload Windows release binaries from ${{ github.sha }}" || echo No changes to commit
           git push
 
