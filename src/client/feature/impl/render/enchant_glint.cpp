@@ -13,23 +13,27 @@ namespace selaura {
     }
 
     glm::vec4 enchant_glint::get_chroma_color(float speed, float saturation, float value) {
-        using namespace std::chrono;
-        float time = duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count() / 1000.0f;
-        float hue = fmodf(time * speed * 60.0f, 360.0f);
+        using clock = std::chrono::steady_clock;
+        using seconds_f = std::chrono::duration<float>;
+
+        float time = std::chrono::duration_cast<seconds_f>(clock::now().time_since_epoch()).count();
+        float hue = std::fmod(time * speed * 60.0f, 360.0f);
 
         float c = value * saturation;
-        float x = c * (1 - fabsf(fmodf(hue / 60.0f, 2) - 1));
+        float x = c * (1.0f - std::abs(std::fmod(hue / 60.0f, 2.0f) - 1.0f));
         float m = value - c;
 
         float r = 0, g = 0, b = 0;
-        if (0 <= hue && hue < 60)      r = c, g = x, b = 0;
-        else if (60 <= hue && hue < 120)  r = x, g = c, b = 0;
-        else if (120 <= hue && hue < 180) r = 0, g = c, b = x;
-        else if (180 <= hue && hue < 240) r = 0, g = x, b = c;
-        else if (240 <= hue && hue < 300) r = x, g = 0, b = c;
-        else if (300 <= hue && hue < 360) r = c, g = 0, b = x;
+        switch (static_cast<int>(hue / 60.0f)) {
+            case 0:  r = c; g = x; b = 0; break;
+            case 1:  r = x; g = c; b = 0; break;
+            case 2:  r = 0; g = c; b = x; break;
+            case 3:  r = 0; g = x; b = c; break;
+            case 4:  r = x; g = 0; b = c; break;
+            case 5:  r = c; g = 0; b = x; break;
+        }
 
-        return { r + m, g + m, b + m, 1.0f };
+        return glm::vec4(r + m, g + m, b + m, 1.0f);
     }
 
     void enchant_glint::on_renderiteminhanddescription_event(selaura::RenderItemInHandDescription_event &event) {

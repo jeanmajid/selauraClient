@@ -168,23 +168,6 @@ namespace selaura {
         return std::invoke(original, std::forward<Args>(args)...);
     }
 
-    template <auto fn, typename T, typename... Args>
-    void call_ctor_fn(T* self, Args&&... args) {
-        using fn_t = void(*)(T*, std::decay_t<Args>...);
-        static fn_t trampoline = nullptr;
-
-        auto key = fn_hash<fn>();
-        auto it = hook_map.find(key);
-        if (it == hook_map.end())
-            throw std::runtime_error("Hook not found");
-
-        if (!trampoline) {
-            trampoline = reinterpret_cast<fn_t>(it->second.trampoline().address());
-        }
-
-        trampoline(self, std::forward<Args>(args)...);
-    }
-
     template <auto... fn>
     void patch_fns() {
         auto futures = std::array{
