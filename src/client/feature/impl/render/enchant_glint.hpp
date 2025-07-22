@@ -21,7 +21,7 @@ namespace selaura {
 
     struct enchant_glint : feature<enchant_glint> {
         enchant_glint() {
-            std::get<0>(this->settings) = selaura::feature_setting<glm::vec4>("Color", {255, 255, 0, 1});
+            std::get<0>(this->settings) = selaura::feature_setting<glm::vec4>("Color", {73, 36, 116, 1});
             std::get<1>(this->settings) = selaura::feature_setting<bool>("Chroma", true);
             std::get<2>(this->settings) = selaura::feature_setting<float>("Chroma Speeding", 1.0f, 0.0f, 5.0f, 0.1f);
         }
