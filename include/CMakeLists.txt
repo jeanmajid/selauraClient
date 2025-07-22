@@ -55,6 +55,12 @@ CPMAddPackage(
         GIT_TAG main
 )
 
+CPMAddPackage(
+        NAME glaze
+        GITHUB_REPOSITORY stephenberry/glaze
+        GIT_TAG main
+)
+
 add_library(selaura INTERFACE)
 add_library(selaura::selaura ALIAS selaura)
 
@@ -70,4 +76,5 @@ target_link_libraries(selaura INTERFACE
         GSL::gsl
         glm
         safetyhook::safetyhook
+        glaze::glaze
 )

@@ -1,5 +1,6 @@
 #include "client.hpp"
 
+#include "config/types.hpp"
 #include "memory/patcher.hpp"
 
 namespace selaura {
@@ -15,8 +16,9 @@ namespace selaura {
             spdlog::flush_on(spdlog::level::info);
 
             auto& feature_manager = this->get<selaura::feature_manager>();
-            feature_manager.for_each([](auto& f) {
+            feature_manager.for_each([]<typename T>(std::shared_ptr<T>& f) {
                 f->set_enabled(true);
+                spdlog::info("Module Loaded: {}", selaura::feature_traits<T>::name.c_str());
             });
 
             selaura::patch_fns<

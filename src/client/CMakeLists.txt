@@ -28,6 +28,7 @@ target_include_directories(selaura_client PRIVATE
     gsl
     glm
     safetyhook
+    glaze
 )
 
 target_link_libraries(selaura_client PRIVATE
@@ -37,4 +38,5 @@ target_link_libraries(selaura_client PRIVATE
     Microsoft.GSL::GSL
     glm
     safetyhook::safetyhook
+    glaze::glaze
 )

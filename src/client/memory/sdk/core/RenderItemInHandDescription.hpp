@@ -14,6 +14,6 @@ namespace mce::framebuilder {
         glm::vec3 mMultiplicativeTintColor;
         float mMultiplicativeTintColorAlpha;
 
-        void RenderItemInHandDescription_ctor_hk(void* renderObject, void* itemFlags, void* material, void* glintTexture, void* worldMatrix, bool isDrawingUI, void* globalConstantBuffers, unsigned __int16 viewId, void* renderMetadata);
+        void* RenderItemInHandDescription_ctor_hk(void* renderObject, void* itemFlags, void* material, void* glintTexture, void* worldMatrix, bool isDrawingUI, void* globalConstantBuffers, unsigned __int16 viewId, void* renderMetadata);
     };
 };

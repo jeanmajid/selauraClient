@@ -55,10 +55,14 @@ namespace selaura {
             return std::get<std::shared_ptr<T>>(features);
         }
 
+        features_t get_features() {
+            return features;
+        }
+
         template <typename Func>
         void for_each(Func&& func) {
-            std::apply([&](auto&&... ptrs) {
-                (func(ptrs), ...);
+            std::apply([&]<typename... Ts>(std::shared_ptr<Ts>&... ptrs) {
+                (func.template operator()<Ts>(ptrs), ...);
             }, features);
         }
 

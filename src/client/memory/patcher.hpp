@@ -88,6 +88,20 @@ namespace selaura {
         using pointer_type = Ret(Class::*)(Args...) const;
     };
 
+    template<typename fn>
+    struct to_free_function;
+
+    template<typename Ret, typename Class, typename... Args>
+    struct to_free_function<Ret(Class::*)(Args...)> {
+        using type = Ret(*)(Class*, Args...);
+    };
+
+    template<typename Ret, typename Class, typename... Args>
+    struct to_free_function<Ret(Class::*)(Args...) const> {
+        using type = Ret(*)(const Class*, Args...);
+    };
+
+
     inline std::unordered_map<std::size_t, SafetyHookInline> hook_map;
 
     template <auto fn>
@@ -152,6 +166,23 @@ namespace selaura {
         std::memcpy(&original, &trampoline, sizeof(trampoline));
 
         return std::invoke(original, std::forward<Args>(args)...);
+    }
+
+    template <auto fn, typename T, typename... Args>
+    void call_ctor_fn(T* self, Args&&... args) {
+        using fn_t = void(*)(T*, std::decay_t<Args>...);
+        static fn_t trampoline = nullptr;
+
+        auto key = fn_hash<fn>();
+        auto it = hook_map.find(key);
+        if (it == hook_map.end())
+            throw std::runtime_error("Hook not found");
+
+        if (!trampoline) {
+            trampoline = reinterpret_cast<fn_t>(it->second.trampoline().address());
+        }
+
+        trampoline(self, std::forward<Args>(args)...);
     }
 
     template <auto... fn>
