@@ -13,7 +13,7 @@ add_library(selaura_client SHARED
     memory/sdk/renderer/bgfx/bgfx.cpp
     memory/sdk/core/RenderItemInHandDescription.cpp
     memory/sdk/client/ClientInstanceScreenModel.cpp
-    command/impl/Help.cpp
+        memory/sdk/game/network/LoopbackPacketSender.cpp
     feature/impl/render/fullbright.cpp
     feature/impl/render/paperdoll.cpp
     feature/impl/render/enchant_glint.cpp

@@ -31,7 +31,8 @@ namespace selaura {
                 &Dimension::getTimeOfDay_hk,
                 &bgfx::d3d11::RendererContextD3D11::submit_hk,
                 &bgfx::d3d12::RendererContextD3D12::submit_hk,
-                &ClientInstanceScreenModel::executeCommand_hk
+                &ClientInstanceScreenModel::executeCommand_hk,
+                &LoopbackPacketSender::send
             >();
 
             auto end = std::chrono::steady_clock::now();
@@ -39,6 +40,9 @@ namespace selaura {
             spdlog::info("Completed injection in {} ms.", static_cast<int>(ms));
 
             spdlog::info("Write \"help\" in the command line to see a list of commands.");
+
+            //auto command_handler = this->get<selaura::command_handler>();
+            //std::thread(&command_handler::start, command_handler).detach();
         } catch (const std::exception& e) {
             spdlog::info("std::exception: {}\n", e.what());
             this->unload();
