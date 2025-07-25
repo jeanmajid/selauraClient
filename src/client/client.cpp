@@ -1,7 +1,9 @@
 #include "client.hpp"
 
 #include "config/types.hpp"
+#include "magic_enum/magic_enum_utility.hpp"
 #include "memory/patcher.hpp"
+#include "memory/sdk/game/network/PacketHandlerDispatcherInstance.hpp"
 
 namespace selaura {
     void client::init() {
@@ -31,9 +33,20 @@ namespace selaura {
                 &Dimension::getTimeOfDay_hk,
                 &bgfx::d3d11::RendererContextD3D11::submit_hk,
                 &bgfx::d3d12::RendererContextD3D12::submit_hk,
-                &ClientInstanceScreenModel::executeCommand_hk,
-                &LoopbackPacketSender::send
+                &ClientInstanceScreenModel::executeCommand_hk
             >();
+
+            magic_enum::enum_for_each<MinecraftPacketIds>([](auto val) {
+                constexpr MinecraftPacketIds id = val;
+
+                const auto pkt = selaura::call_original<&MinecraftPackets::createPacket_hk>(id);
+                if (!pkt) return;
+
+                Packet* packet = pkt.get();
+                void* vtable = packet->handler;
+
+                selaura::patch_vtable_fn<&PacketHandlerDispatcherInstance_callbacks<id>::handle>(vtable, 1);
+            });
 
             auto end = std::chrono::steady_clock::now();
             auto ms = std::chrono::duration<float, std::milli>(end - start).count();
