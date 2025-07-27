@@ -51,15 +51,9 @@ namespace selaura {
 
             auto end = std::chrono::steady_clock::now();
             auto ms = std::chrono::duration<float, std::milli>(end - start).count();
+
             spdlog::info("Completed injection in {} ms.", static_cast<int>(ms));
-
             spdlog::info("Write \"help\" in the command line to see a list of commands.");
-
-            auto guiData = minecraftGame->getPrimaryClientInstance()->guiData;
-            selaura::call_original<&GuiData::displayClientMessage>(guiData, "hello", std::nullopt, false);
-
-            //auto command_handler = this->get<selaura::command_handler>();
-            //std::thread(&command_handler::start, command_handler).detach();
         } catch (const std::exception& e) {
             spdlog::info("std::exception: {}\n", e.what());
             this->unload();

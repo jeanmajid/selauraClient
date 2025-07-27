@@ -7,7 +7,6 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-//#include "command/command_handler.hpp"
 #include "event/event_manager.hpp"
 #include "feature/feature_manager.hpp"
 #include "memory/signatures.hpp"
@@ -40,7 +39,7 @@ namespace selaura {
         void unload();
     };
 
-    inline std::shared_ptr<client> client_instance;
+    static inline std::shared_ptr<client> client_instance;
     inline std::shared_ptr<client> get() {
         return client_instance;
     }

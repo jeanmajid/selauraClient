@@ -16,8 +16,8 @@ void init() {
     freopen_s(&fp, "CONOUT$", "w", stderr);
     freopen_s(&fp, "CONIN$", "r", stdin);
 #endif
-    static auto instance = std::make_shared<selaura::client>();
-    instance->init();
+    selaura::client_instance = std::make_shared<selaura::client>();
+    selaura::client_instance->init();
 }
 
 #ifdef SELAURA_WINDOWS
