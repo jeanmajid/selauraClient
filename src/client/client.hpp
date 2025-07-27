@@ -12,6 +12,8 @@
 #include "feature/feature_manager.hpp"
 #include "memory/signatures.hpp"
 
+#include "memory/sdk/game/MinecraftGame.hpp"
+
 namespace selaura {
     template <typename T, typename... Ts>
     concept one_of = (std::same_as<T, Ts> || ...);
@@ -42,4 +44,6 @@ namespace selaura {
     inline std::shared_ptr<client> get() {
         return client_instance;
     }
+
+    inline MinecraftGame* minecraftGame;
 };

@@ -24,6 +24,7 @@ namespace selaura {
             });
 
             selaura::patch_fns<
+                &MinecraftGame::update_hk,
                 &Dimension::Dimension_ctor_hk,
                 &mce::framebuilder::RenderItemInHandDescription::RenderItemInHandDescription_ctor_hk,
                 &ScreenView::setupAndRender_hk,
@@ -39,7 +40,7 @@ namespace selaura {
             magic_enum::enum_for_each<MinecraftPacketIds>([](auto val) {
                 constexpr MinecraftPacketIds id = val;
 
-                const auto pkt = selaura::call_original<&MinecraftPackets::createPacket_hk>(id);
+                const auto pkt = selaura::call_original<&MinecraftPackets::createPacket>(id);
                 if (!pkt) return;
 
                 Packet* packet = pkt.get();
@@ -53,6 +54,9 @@ namespace selaura {
             spdlog::info("Completed injection in {} ms.", static_cast<int>(ms));
 
             spdlog::info("Write \"help\" in the command line to see a list of commands.");
+
+            auto guiData = minecraftGame->getPrimaryClientInstance()->guiData;
+            selaura::call_original<&GuiData::displayClientMessage>(guiData, "hello", std::nullopt, false);
 
             //auto command_handler = this->get<selaura::command_handler>();
             //std::thread(&command_handler::start, command_handler).detach();

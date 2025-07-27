@@ -180,7 +180,6 @@ namespace selaura {
         return std::invoke(original, std::forward<Args>(args)...);
     }
 
-
     template <auto... fn>
     void patch_fns() {
         auto futures = std::array{

@@ -3,5 +3,5 @@
 #include "Packet.hpp"
 
 struct MinecraftPackets {
-    static std::shared_ptr<Packet> createPacket_hk(MinecraftPacketIds id);
+    static inline std::shared_ptr<Packet> createPacket(MinecraftPacketIds id);
 };

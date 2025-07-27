@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include <typeindex>
+#include <spdlog/spdlog.h>
 
 #include <libhat/scanner.hpp>
 #include <libhat/signature.hpp>
@@ -11,6 +12,7 @@
 #include "sdk/core/RenderItemInHandDescription.hpp"
 #include "sdk/game/uri/GameArguments.hpp"
 
+#include "sdk/game/MinecraftGame.hpp"
 #include "sdk/gui/ScreenView.hpp"
 #include "sdk/renderer/bgfx/bgfx.hpp"
 #include "sdk/world/BaseLightTextureImageBuilder.hpp"
@@ -30,25 +32,17 @@ namespace selaura {
     template <auto fn, typename T = std::uintptr_t>
     T resolve_signature(std::string_view module_name = {}) {
         static auto& handle = module_name.empty()
-               ? get_dynamic_module()
-               : get_dynamic_module(module_name);
+            ? get_dynamic_module()
+            : get_dynamic_module(module_name);
 
-        return reinterpret_cast<T>(
-            hat::find_pattern(handle.memory_view, signature<fn>::value).get()
-        );
-    }
+        void* address = hat::find_pattern(handle.memory_view, signature<fn>::value).get();
 
-    template <auto... tags>
-    void prewarm_signatures(std::string_view module_name = {}) {
-        std::vector<std::future<void>> futures;
-
-        (futures.emplace_back(std::async(std::launch::async, [module_name]() {
-            (void)resolve_signature<tags, std::uintptr_t>(module_name);
-        })), ...);
-
-        for (auto& fut : futures) {
-            fut.get();
+        if (!address) {
+            spdlog::error("Failed to resolve signature");
+            return T{};
         }
+
+        return reinterpret_cast<T>(address);
     }
 
     template <>
@@ -97,12 +91,22 @@ namespace selaura {
     };
 
     template <>
+    struct selaura::signature<&MinecraftGame::update_hk> {
+        static constexpr auto value = hat::compile_signature<"48 8B C4 48 89 58 10 48 89 70 18 48 89 78 20 55 41 54 41 55 41 56 41 57 48 8D A8 F8 F6">();
+    };
+
+    template <>
     struct selaura::signature<&ClientInstanceScreenModel::executeCommand_hk> {
         static constexpr auto value = hat::compile_signature<"48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B EA 48 8B F1 C7 44 24">();
     };
 
     template <>
-    struct selaura::signature<&MinecraftPackets::createPacket_hk> {
+    struct selaura::signature<&MinecraftPackets::createPacket> {
         static constexpr auto value = hat::compile_signature<"48 89 5C 24 10 48 89 74 24 18 57 48 83 EC 50 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 48 48 8B D9 48 89">();
+    };
+
+    template <>
+    struct selaura::signature<&GuiData::displayClientMessage> {
+        static constexpr auto value = hat::compile_signature<"40 55 53 56 57 41 56 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 41 0F B6 ? 49 8B D8">();
     };
 };

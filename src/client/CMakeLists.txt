@@ -13,7 +13,8 @@ add_library(selaura_client SHARED
     memory/sdk/renderer/bgfx/bgfx.cpp
     memory/sdk/core/RenderItemInHandDescription.cpp
     memory/sdk/client/ClientInstanceScreenModel.cpp
-    memory/sdk/game/network/MinecraftPackets.cpp
+    memory/sdk/game/ClientInstance.cpp
+    memory/sdk/game/MinecraftGame.cpp
     feature/impl/render/fullbright.cpp
     feature/impl/render/paperdoll.cpp
     feature/impl/render/enchant_glint.cpp
