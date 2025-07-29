@@ -18,6 +18,7 @@
 #include "sdk/world/BaseLightTextureImageBuilder.hpp"
 #include "sdk/world/Dimension.hpp"
 #include "sdk/client/ClientInstanceScreenModel.hpp"
+#include "sdk/network/LoopbackPacketSender.hpp"
 #include "sdk/network/MinecraftPackets.hpp"
 
 namespace selaura {
@@ -108,5 +109,10 @@ namespace selaura {
     template <>
     struct selaura::signature<&GuiData::displayClientMessage> {
         static constexpr auto value = hat::compile_signature<"40 55 53 56 57 41 56 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 41 0F B6 ? 49 8B D8">();
+    };
+
+    template <>
+    struct selaura::signature<&LoopbackPacketSender::send_hk> {
+        static constexpr auto value = hat::compile_signature<"48 83 EC ? 48 0F BE ? ? 48 83 C0 ? 74 27">();
     };
 };
