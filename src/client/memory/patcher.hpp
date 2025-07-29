@@ -144,9 +144,9 @@ namespace selaura {
         hook_map.emplace(fn_hash<fn>(), std::move(hook));
     }
 
-    template <auto fn>
-    void patch_vtable_fn(void* vtable, std::size_t index) {
-        void** obj = *reinterpret_cast<void***>(vtable);
+    template <auto fn, typename vptr>
+    void patch_vtable_fn(vptr* vtable, std::size_t index) {
+        void** obj = *reinterpret_cast<void***>(const_cast<void*>(static_cast<const void*>(vtable)));
         patch_fn<fn>(obj[index]);
     }
 

@@ -18,7 +18,7 @@
 #include "sdk/world/BaseLightTextureImageBuilder.hpp"
 #include "sdk/world/Dimension.hpp"
 #include "sdk/client/ClientInstanceScreenModel.hpp"
-#include "sdk/game/network/MinecraftPackets.hpp"
+#include "sdk/network/MinecraftPackets.hpp"
 
 namespace selaura {
     template <auto fn>

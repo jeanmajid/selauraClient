@@ -3,7 +3,7 @@
 #include "config/types.hpp"
 #include "magic_enum/magic_enum_utility.hpp"
 #include "memory/patcher.hpp"
-#include "memory/sdk/game/network/PacketHandlerDispatcherInstance.hpp"
+#include "memory/sdk/network/PacketHandlerDispatcherInstance.hpp"
 
 namespace selaura {
     void client::init() {
@@ -44,9 +44,7 @@ namespace selaura {
                 if (!pkt) return;
 
                 Packet* packet = pkt.get();
-                void* vtable = packet->mHandler;
-
-                selaura::patch_vtable_fn<&PacketHandlerDispatcherInstance_callbacks<id>::handle>(vtable, 1);
+                selaura::patch_vtable_fn<&PacketHandlerDispatcherInstance<id>::handle>(packet->mHandler, 1);
             });
 
             auto end = std::chrono::steady_clock::now();
