@@ -28,7 +28,7 @@ namespace selaura {
 
         void on_enable() override;
         void on_disable() override;
-        void on_rendercustom_event(selaura::getTimeOfDay_event& event);
+        void on_timeofday_event(selaura::getTimeOfDay_event& event);
     };
 
 };
