@@ -44,7 +44,7 @@ namespace selaura {
                 if (!pkt) return;
 
                 Packet* packet = pkt.get();
-                void* vtable = packet->handler;
+                void* vtable = packet->mHandler;
 
                 selaura::patch_vtable_fn<&PacketHandlerDispatcherInstance_callbacks<id>::handle>(vtable, 1);
             });

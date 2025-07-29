@@ -1,17 +1,45 @@
 #pragma once
+#include <cstdint>
 
 enum class MinecraftPacketIds : int {
     Text = 0x9
 };
 
 struct PacketHandlerDispatcherInstance {
-    std::byte pad[0x2];
+    virtual ~PacketHandlerDispatcherInstance() = default;
+};
+
+enum class PacketPriority : int {
+    ImmediatePriority = 0,
+    HighPriority = 1,
+    MediumPriority = 2,
+    LowPriority = 3,
+    NumberOfPriorities = 4,
+};
+
+enum class Compressibility : int {
+    Compressible = 0,
+    Incompressible = 1,
+};
+
+namespace NetworkPeer {
+    enum class Reliability : int {
+        Reliable = 0,
+        ReliableOrdered = 1,
+        Unreliable = 2,
+        UnreliableSequenced = 3,
+    };
 };
 
 struct Packet {
-    std::byte pad[0x20];
-    PacketHandlerDispatcherInstance* handler;
-    std::byte pad2[0x8];
+    virtual ~Packet() = default;
+    PacketPriority mPriority;
+    NetworkPeer::Reliability mReliability;
+    uint8_t mClientSubId;
+    bool mIsHandled;
+    std::chrono::steady_clock::time_point mReceiveTimepoint;
+    PacketHandlerDispatcherInstance* mHandler;
+    Compressibility mCompressible;
 };
 
 enum class TextPacketType : int {
@@ -31,12 +59,14 @@ enum class TextPacketType : int {
 
 struct TextPacket : public Packet {
     TextPacketType mType;
-    std::string mName;
+    std::string mAuthor;
     std::string mMessage;
-    std::vector<std::string> mParams;
-    bool translationNeeded = false;
-    std::string xuid;
-    std::string platformId;
+    std::vector<std::string> params;
+    bool mLocalize = false;
+    std::string mXuid;
+    std::string mPlatformId;
 
     TextPacket() = default;
 };
+
+static_assert(sizeof(Packet) == 0x30);
