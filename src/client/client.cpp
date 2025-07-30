@@ -17,12 +17,6 @@ namespace selaura {
             spdlog::set_pattern("[%T] [client/%^%l%$] %v");
             spdlog::flush_on(spdlog::level::info);
 
-            auto& feature_manager = this->get<selaura::feature_manager>();
-            feature_manager.for_each([]<typename T>(std::shared_ptr<T>& f) {
-                f->set_enabled(true);
-                spdlog::info("Module Loaded: {}", selaura::feature_traits<T>::name.c_str());
-            });
-
             selaura::patch_fns<
                 &MinecraftGame::update_hk,
                 &Dimension::Dimension_ctor_hk,
@@ -34,7 +28,8 @@ namespace selaura {
                 &Dimension::getTimeOfDay_hk,
                 &bgfx::d3d11::RendererContextD3D11::submit_hk,
                 &bgfx::d3d12::RendererContextD3D12::submit_hk,
-                &ClientInstanceScreenModel::executeCommand_hk
+                &ClientInstanceScreenModel::executeCommand_hk,
+                &LoopbackPacketSender::send_hk
             >();
 
             magic_enum::enum_for_each<MinecraftPacketIds>([](auto val) {

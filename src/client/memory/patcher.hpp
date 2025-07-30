@@ -191,4 +191,17 @@ namespace selaura {
         }
     }
 
+    template <typename Ret, typename T, typename... Args>
+    Ret call_virtual(T* instance, std::size_t index, Args&&... args) {
+        using Method = Ret(T::*)(Args...);
+
+        void** vtable = *reinterpret_cast<void***>(instance);
+        void* func = vtable[index];
+
+        Method method;
+        std::memcpy(&method, &func, sizeof(void*));
+
+        return std::invoke(method, instance, std::forward<Args>(args)...);
+    }
+
 }

@@ -15,4 +15,6 @@ struct Packet {
     std::chrono::steady_clock::time_point mReceiveTimepoint;
     const IPacketHandlerDispatcher* mHandler;
     Compressibility mCompressible;
+
+    MinecraftPacketIds getId();
 };

@@ -9,6 +9,7 @@
 
 #include "event/event_manager.hpp"
 #include "feature/feature_manager.hpp"
+#include "command/command_handler.hpp"
 #include "memory/signatures.hpp"
 
 #include "memory/sdk/game/MinecraftGame.hpp"
@@ -34,14 +35,14 @@ namespace selaura {
     };
 
 
-    struct client : public client_base<selaura::event_manager, selaura::feature_manager> {
+    struct client : public client_base<selaura::event_manager, selaura::feature_manager, selaura::command_handler> {
         void init();
         void unload();
     };
 
-    static inline std::shared_ptr<client> client_instance;
-    inline std::shared_ptr<client> get() {
-        return client_instance;
+    inline std::shared_ptr<client>& get() {
+        static std::shared_ptr<client> instance = std::make_shared<client>();
+        return instance;
     }
 
     inline MinecraftGame* minecraftGame;

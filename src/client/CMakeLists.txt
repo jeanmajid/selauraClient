@@ -15,10 +15,14 @@ add_library(selaura_client SHARED
     memory/sdk/client/ClientInstanceScreenModel.cpp
     memory/sdk/game/ClientInstance.cpp
     memory/sdk/game/MinecraftGame.cpp
+    memory/sdk/network/LoopbackPacketSender.cpp
+    memory/sdk/client/renderer/rendergraph/Packet.cpp
     feature/impl/render/fullbright.cpp
     feature/impl/render/paperdoll.cpp
     feature/impl/render/enchant_glint.cpp
     feature/impl/render/environment.cpp
+    command/impl/enable_command.cpp
+    command/impl/disable_command.cpp
 )
 
 target_include_directories(selaura_client PRIVATE
