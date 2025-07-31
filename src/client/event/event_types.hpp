@@ -1,7 +1,7 @@
 #pragma once
 #include "../memory/sdk/world/BaseLightTextureImageBuilder.hpp"
 #include "../memory/sdk/renderer/screen/MinecraftUIRenderContext.hpp"
-#include "../memory/sdk/client/renderer/rendergraph/Packet.hpp"
+#include "../memory/sdk/network/Packet.hpp"
 #include <gsl/gsl>
 
 namespace selaura {

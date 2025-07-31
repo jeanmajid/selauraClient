@@ -1,9 +1,9 @@
 #pragma once
-#include "../../../network/MinecraftPacketIds.hpp"
-#include "../../../network/IPacketHandlerDispatcher.hpp"
-#include "../../../deps/raknet/PacketPriority.hpp"
-#include "../../../network/Compressibility.hpp"
-#include "../../../network/NetworkPeer.hpp"
+#include "MinecraftPacketIds.hpp"
+#include "IPacketHandlerDispatcher.hpp"
+#include "../deps/raknet/PacketPriority.hpp"
+#include "Compressibility.hpp"
+#include "NetworkPeer.hpp"
 #include <chrono>
 
 struct Packet {

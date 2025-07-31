@@ -1,5 +1,5 @@
 #pragma once
-#include "../client/renderer/rendergraph/Packet.hpp"
+#include "Packet.hpp"
 
 struct LoopbackPacketSender {
     void send_hk(Packet* packet);

@@ -1,5 +1,5 @@
 #pragma once
-#include "../../client/renderer/rendergraph/Packet.hpp"
+#include "../Packet.hpp"
 #include "TextPacketType.hpp"
 
 struct TextPacket : public Packet {
