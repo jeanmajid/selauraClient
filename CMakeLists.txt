@@ -48,7 +48,7 @@ add_compile_definitions(
 )
 
 add_subdirectory(include)
-add_subdirectory(src/thunker)
+add_subdirectory(src/mc)
 add_subdirectory(src/client)
 
 if (MSVC)
