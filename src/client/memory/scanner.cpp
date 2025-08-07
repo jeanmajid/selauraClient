@@ -3,6 +3,7 @@
 namespace selaura {
     void scanner::start_scanning_thread() {
         this->m_scanning_thread = std::thread([this]() {
+            this->game_handle = selaura::get_handle("Minecraft.Windows.exe");
             this->resolve_all_async(signatures);
         });
     }

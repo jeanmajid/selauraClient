@@ -19,7 +19,11 @@ namespace selaura {
         this->get<scanner>().start_scanning_thread();
         this->get<scanner>().kill_scanning_thread();
 
-        std::println("r: {}", selaura::signature_runtime_value<&hi>::value);
+        if (this->get<scanner>().invalid_signatures) {
+            this->m_running = false;
+        }
+
+        std::println("d: {}", selaura::signature_runtime_value<&hi>::value);
 
         auto end = std::chrono::high_resolution_clock::now();
         auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();

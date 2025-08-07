@@ -6,6 +6,7 @@ add_library(selaura_client SHARED
         selaura.cpp
         memory/scanner.cpp
         memory/scan_target.cpp
+        memory/handle.cpp
 )
 
 target_include_directories(selaura_client PRIVATE
