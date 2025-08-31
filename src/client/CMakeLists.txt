@@ -3,10 +3,11 @@ project(selaura_client LANGUAGES CXX)
 
 add_library(selaura_client SHARED
         dllmain.cpp
-        selaura.cpp
+        components/client.cpp
         memory/scanner.cpp
         memory/scan_target.cpp
         memory/handle.cpp
+        patches/patch_manager.cpp
 )
 
 target_include_directories(selaura_client PRIVATE

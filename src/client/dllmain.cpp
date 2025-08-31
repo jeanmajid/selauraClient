@@ -6,7 +6,7 @@
 #include <print>
 #include <Windows.h>
 
-#include "selaura.hpp"
+#include "components/client.hpp"
 
 DWORD WINAPI start(LPVOID lpParam) {
 //#ifdef _DEBUG
@@ -21,14 +21,13 @@ DWORD WINAPI start(LPVOID lpParam) {
     freopen_s(&fp, "CONIN$", "r", stdin);
 //#endif
 
-    auto client = std::make_shared<selaura::client>();
-    client->init();
+    new (selaura_buffer) selaura::client();
 
-    while (client->m_running) {
+    while (selaura::get().m_running) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
-    client->~client();
+    selaura::get().~client();
     FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), 1);
 }
 
@@ -38,7 +37,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved) {
         CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)start, hModule, 0, nullptr);
     }
 
-    else if (dwReason == DLL_PROCESS_DETACH) std::println("Ejected");
+    else if (dwReason == DLL_PROCESS_DETACH) spdlog::info("Ejected");
     return TRUE;
 }
 #endif

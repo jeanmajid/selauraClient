@@ -1,16 +1,18 @@
 #pragma once
 #include "../../scan_target.hpp"
 #include <libhat/signature.hpp>
+#include <spdlog/spdlog.h>
 
-void hi();
+#include "../../mc/game/IMinecraftGame.hpp"
 
 namespace selaura {
     template <>
-    struct scan_target<&hi, scanner_type::signature> {
-        constexpr static auto value = hat::compile_signature<"48 8B C4 48 89 58 18 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 B8 0F 29 78 A8 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA">();
+    struct scan_target<&IMinecraftGame::update, scanner_type::signature> {
+        constexpr static hat::fixed_string signature = "48 8B C4 48 89 58 10 48 89 70 18 48 89 78 20 55 41 54 41 55 41 56 41 57 48 8D A8 F8 F6";
+        constexpr static auto value = hat::compile_signature<signature>();
     };
 
     using signature_types = std::tuple<
-        scan_target<&hi, scanner_type::signature>
+        scan_target<&IMinecraftGame::update, scanner_type::signature>
     >;
 };
