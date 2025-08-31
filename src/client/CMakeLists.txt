@@ -2,48 +2,33 @@ cmake_minimum_required(VERSION 3.28)
 project(selaura_client LANGUAGES CXX)
 
 add_library(selaura_client SHARED
-    main.cpp
-    client.cpp
-    platform/platform.cpp
-    memory/sdk/gui/ScreenView.cpp
-    memory/sdk/world/BaseLightTextureImageBuilder.cpp
-    memory/sdk/world/Dimension.cpp
-    memory/sdk/game/uri/GameArguments.cpp
-    memory/sdk/renderer/screen/MinecraftUIRenderContext.cpp
-    memory/sdk/renderer/bgfx/bgfx.cpp
-    memory/sdk/core/RenderItemInHandDescription.cpp
-    memory/sdk/client/ClientInstanceScreenModel.cpp
-    memory/sdk/game/ClientInstance.cpp
-    memory/sdk/game/MinecraftGame.cpp
-    memory/sdk/network/LoopbackPacketSender.cpp
-    memory/sdk/network/Packet.cpp
-    feature/impl/render/fullbright.cpp
-    feature/impl/render/paperdoll.cpp
-    feature/impl/render/enchant_glint.cpp
-    feature/impl/render/environment.cpp
-    command/impl/enable_command.cpp
-    command/impl/disable_command.cpp
+        dllmain.cpp
+        components/client.cpp
+        memory/scanner.cpp
+        memory/scan_target.cpp
+        memory/handle.cpp
+        patches/patch_manager.cpp
 )
 
 target_include_directories(selaura_client PRIVATE
-    fmt
-    EnTT
-    spdlog
-    libhat
-    gsl
-    glm
-    safetyhook
-    glaze
-    magic_enum
+        fmt
+        EnTT
+        spdlog
+        libhat
+        gsl
+        glm
+        safetyhook
+        glaze
+        magic_enum
 )
 
 target_link_libraries(selaura_client PRIVATE
-    EnTT::EnTT
-    spdlog
-    libhat
-    Microsoft.GSL::GSL
-    glm
-    safetyhook::safetyhook
-    glaze::glaze
-    magic_enum::magic_enum
+        EnTT::EnTT
+        spdlog
+        libhat
+        Microsoft.GSL::GSL
+        glm
+        safetyhook::safetyhook
+        glaze::glaze
+        magic_enum::magic_enum
 )
