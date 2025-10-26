@@ -3,7 +3,7 @@
 #include <print>
 
 #include <api/imports.hpp>
-#include <loader/runtime.hpp>
+#include <../src/runtime.hpp>
 
 #include <event/events.hpp>
 #include <api/helpers/mcuirc.hpp>

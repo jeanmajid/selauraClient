@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.28)
 project(selaura_client LANGUAGES CXX)
 
 add_library(selaura_client SHARED
-        loader/main_win.cpp
-        loader/runtime.cpp
+        main.cpp
+        runtime.cpp
         hooks/hooks.cpp
 )
 

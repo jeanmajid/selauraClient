@@ -3,7 +3,7 @@
 #include <libhat/scanner.hpp>
 #include <print>
 
-#include <loader/runtime.hpp>
+#include <../runtime.hpp>
 
 
 #include <api/mc/world/Minecraft.hpp>

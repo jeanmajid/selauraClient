@@ -1,9 +1,6 @@
 #pragma once
 #include <Windows.h>
 
-// this is because selaura_client.dll is embedded into minecraft as dxgi.dll
-// therefore, it needs to still have the necessary inside of dxgi
-// or the game will not open.
 #pragma comment(linker, "/export:ApplyCompatResolutionQuirking=c:\\windows\\system32\\dxgi.ApplyCompatResolutionQuirking,@1")
 #pragma comment(linker, "/export:CompatString=c:\\windows\\system32\\dxgi.CompatString,@2")
 #pragma comment(linker, "/export:CompatValue=c:\\windows\\system32\\dxgi.CompatValue,@3")
@@ -24,4 +21,4 @@
 #pragma comment(linker, "/export:SetAppCompatStringPointer=c:\\windows\\system32\\dxgi.SetAppCompatStringPointer,@8")
 #pragma comment(linker, "/export:UpdateHMDEmulationStatus=c:\\windows\\system32\\dxgi.UpdateHMDEmulationStatus,@9")
 
-BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID);
+BOOL APIENTRY DllMain(HINSTANCE, DWORD fdwReason, LPVOID);

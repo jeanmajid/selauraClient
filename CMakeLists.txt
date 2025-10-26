@@ -49,6 +49,7 @@ add_compile_definitions(
 
 add_subdirectory(include)
 add_subdirectory(src)
+add_subdirectory(src-proxy)
 add_subdirectory(test)
 
 if (MSVC)
