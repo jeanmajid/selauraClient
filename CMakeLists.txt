@@ -48,8 +48,8 @@ add_compile_definitions(
 )
 
 add_subdirectory(include)
-add_subdirectory(src/mc)
-add_subdirectory(src/client)
+add_subdirectory(src)
+add_subdirectory(test)
 
 if (MSVC)
     add_compile_options(/W4 /permissive- /wd4201 /wd4324)

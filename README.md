@@ -12,9 +12,8 @@ Selaura Client
 This repository contains the full source code for Selaura Client. Selaura Client is a mod that aims to improve user experience of Minecraft: Bedrock Edition.
 
 ## 🖥️ Compatibility
-Selaura Client currently supports:
+Selaura Client aims to support:
 - Windows 10/11 (64-bit Only)
-- Xbox (requires Dev Mode and installation of DLL within Minecraft's files)
 - Android 9+ (ARM64 Only)
 - Any device supporting [mcpelauncher-linux](https://github.com/minecraft-linux/mcpelauncher-manifest)
 
@@ -24,8 +23,6 @@ Selaura Client currently supports:
 - [foonathan/type_safe](https://github.com/foonathan/type_safe)
 - [BasedInc/libhat](https://github.com/BasedInc/libhat)
 - [Neargye/magic_enum](https://github.com/Neargye/magic_enum)
-- [kunitoki/LuaBridge3](https://github.com/kunitoki/LuaBridge3)
-- [Sinan-Karakaya/cpp-i18n](https://github.com/Sinan-Karakaya/cpp-i18n)
 - [g-truc/glm](https://github.com/g-truc/glm)
 - [ocornut/imgui](https://github.com/ocornut/imgui)
 
