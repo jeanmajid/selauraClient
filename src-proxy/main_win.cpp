@@ -1,9 +1,10 @@
-#include "main_win_uwp.hpp"
+#include "main_win.hpp"
 
 #include <filesystem>
 #include <functional>
 #include <print>
 #include <thread>
+#include <shlobj_core.h>
 
 #include <winrt/windows.applicationmodel.h>
 #include <winrt/windows.foundation.h>
@@ -28,8 +29,16 @@ DWORD WINAPI SelauraRuntimeLoaderProc() {
     std::println("[Selaura Runtime Loader] Thread ID: {}, Thread Handle: {}", mc_thread_id, mc_thread_handle);
     std::println("[Selaura Runtime Loader] Press Numpad1 to End");
 
-    auto winrt_folder = winrt::Windows::Storage::ApplicationData::Current().RoamingFolder();
-    auto folder = std::filesystem::path(winrt::to_string(winrt_folder.Path())) / "Selaura";
+    PWSTR appDataPath = nullptr;
+    if (FAILED(SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, nullptr, &appDataPath))) {
+        throw std::runtime_error("Failed to get AppData path");
+    }
+
+    std::filesystem::path folder = appDataPath;
+    CoTaskMemFree(appDataPath);
+
+    folder /= R"(Minecraft Bedrock\Users\Shared\games\com.mojang\Selaura)";
+
 
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hOut != INVALID_HANDLE_VALUE) {
@@ -97,11 +106,24 @@ DWORD WINAPI SelauraRuntimeLoaderProc() {
         auto* ctx = new selaura::runtime_context;
         ctx->thread_id = mc_thread_id;
 
-        const winrt::Windows::ApplicationModel::Package pkg = winrt::Windows::ApplicationModel::Package::Current();
-        ctx->version_major = pkg.Id().Version().Major;
-        ctx->version_minor = pkg.Id().Version().Minor;
-        ctx->version_build = pkg.Id().Version().Build;
-        ctx->version_revision = pkg.Id().Version().Revision;
+        DWORD handle = 0;
+        wchar_t path[MAX_PATH];
+        GetModuleFileNameW(nullptr, path, MAX_PATH);
+
+        DWORD size = GetFileVersionInfoSizeW(path, &handle);
+        if (size) {
+            std::string buffer(size, '\0');
+            if (GetFileVersionInfoW(path, handle, size, buffer.data())) {
+                VS_FIXEDFILEINFO* file_info = nullptr;
+                UINT len = 0;
+                if (VerQueryValueW(buffer.data(), L"\\", reinterpret_cast<LPVOID*>(&file_info), &len) && file_info) {
+                    ctx->version_major = HIWORD(file_info->dwFileVersionMS);
+                    ctx->version_minor = LOWORD(file_info->dwFileVersionMS);
+                    ctx->version_build = HIWORD(file_info->dwFileVersionLS);
+                    ctx->version_revision = LOWORD(file_info->dwFileVersionLS);
+                }
+            }
+        }
 
         HMODULE mod = LoadLibraryExW((folder / "selaura_runtime.dll").c_str(), nullptr, 0);
         using runtime_init_fn = void(*)(selaura::runtime_context*, std::function<void(selaura::runtime*)>);
@@ -125,13 +147,8 @@ DWORD WINAPI SelauraRuntimeLoaderProc() {
 }
 
 BOOL APIENTRY DllMain(HINSTANCE, DWORD fdwReason, LPVOID) {
-    // This DLL is the Selaura Runtime Loader, which is injected
-    // immediately as the game loads by replacing the dxgi.dll.
-    // This is why in the headers it exports the necessary
-    // functions used in that library, so it can be loaded as it
-    // is essential to the game's startup.
-
     if (fdwReason == DLL_PROCESS_ATTACH) {
+        proxy::init_runtime();
         mc_thread_id = std::this_thread::get_id();
         mc_thread_handle = OpenThread(THREAD_ALL_ACCESS, FALSE, GetCurrentThreadId());
 

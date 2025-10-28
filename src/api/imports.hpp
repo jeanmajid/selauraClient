@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef _WIN32
-#define MCAPI extern "C" __declspec(dllimport)
+#define MCAPI __declspec(dllimport)
 #define SELAURA_API extern "C" __declspec(dllexport)
 #else
 #define SELAURA_API extern "C" __attribute__((visibility("default")))

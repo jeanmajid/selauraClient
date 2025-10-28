@@ -7,6 +7,8 @@ add_library(selaura_client SHARED
         hooks/hooks.cpp
 )
 
+target_compile_definitions(selaura_client PRIVATE SELAURA_CLIENT_EXPORTS)
+
 target_include_directories(selaura_client PRIVATE
         fmt
         EnTT
@@ -31,4 +33,5 @@ target_link_libraries(selaura_client PRIVATE
         glaze::glaze
         magic_enum::magic_enum
         runtimeobject.lib
+        version.lib
 )

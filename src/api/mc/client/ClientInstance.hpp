@@ -3,8 +3,7 @@
 
 class ClientInstance {
 public:
-    uintptr_t** vtable;
-    std::byte pad_4[1080];
+    std::byte pad_4[1368];
     std::unique_ptr<GuiData> mGuiData;
 public:
     void* $ctor(

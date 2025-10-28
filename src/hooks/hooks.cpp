@@ -1,43 +1,15 @@
 #include "hooks.hpp"
 #include <safetyhook.hpp>
-#include <libhat/scanner.hpp>
 #include <print>
 
 #include <../runtime.hpp>
-
+#include "memory.hpp"
 
 #include <api/mc/world/Minecraft.hpp>
 #include <api/mc/client/ClientInstance.hpp>
 #include <api/mc/client/gui/ScreenView.hpp>
 
 #include <event/events.hpp>
-
-namespace selaura {
-    template <hat::fixed_string str>
-    void* find_signature() {
-        auto signature = hat::compile_signature<str>();
-        return reinterpret_cast<void*>(hat::find_pattern(signature, ".text").get());
-    }
-    namespace abi {
-        template <typename T>
-        constexpr void* mpf_to_fn(T member_fn) noexcept {
-            static_assert(std::is_member_function_pointer_v<T>,
-                          "mpf_to_fn expects a member function pointer");
-
-#if defined(_MSC_VER)
-            union {
-                T mfptr;
-                void* addr;
-            } u{};
-            u.mfptr = member_fn;
-            return u.addr;
-#else
-            return reinterpret_cast<void*>(*reinterpret_cast<uintptr_t*>(&member_fn));
-#endif
-        }
-
-    }
-}
 
 SafetyHookInline Minecraft_$ctor_hk;
 SafetyHookInline ClientInstance_$ctor_hk;
@@ -80,7 +52,7 @@ void ScreenView::setupAndRender_hk(MinecraftUIRenderContext *ctx) {
 
 
 void selaura::init_hooks() {
-    Minecraft_$ctor_hk = safetyhook::create_inline(
+    /*Minecraft_$ctor_hk = safetyhook::create_inline(
         find_signature<"48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 4D 8B E1 49 8B D8 4C 8B EA">(),
         abi::mpf_to_fn(&Minecraft::$ctor)
     );
@@ -93,5 +65,5 @@ void selaura::init_hooks() {
     ScreenView_setupAndRender_hk = safetyhook::create_inline(
         find_signature<"48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA">(),
         abi::mpf_to_fn(&ScreenView::setupAndRender_hk)
-    );
+    );*/
 }

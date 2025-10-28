@@ -93,6 +93,8 @@ namespace ui {
 
 class MinecraftUIRenderContext {
 public:
+    ClientInstance* mClientInstance;
+public:
     MinecraftUIRenderContext(ClientInstance& client, void* screenContext, void* currentScene);
     virtual ~MinecraftUIRenderContext();
     virtual float getLineLength(Font& font, const std::string& text, float fontSize, bool showColorSymbol);
