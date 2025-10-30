@@ -1,7 +1,9 @@
 #include "main_win.hpp"
 
+#include <dwmapi.h>
 #include <filesystem>
 #include <functional>
+#include <iostream>
 #include <print>
 #include <thread>
 #include <shlobj_core.h>
@@ -19,7 +21,7 @@ DWORD WINAPI SelauraRuntimeLoaderProc() {
     AllocConsole();
 
     AttachConsole(GetCurrentProcessId());
-    SetConsoleTitleA("Selaura Client Console");
+    SetConsoleTitleA("Selaura Runtime Console");
 
     FILE* fp;
     freopen_s(&fp, "CONOUT$", "w", stdout);
@@ -47,6 +49,9 @@ DWORD WINAPI SelauraRuntimeLoaderProc() {
             SetConsoleMode(hOut, mode | 0x0004);
         }
     }
+
+
+    auto* ctx = new selaura::runtime_context;
 
     const auto runtime_path = folder / "selaura_runtime.dll";
     if (!std::filesystem::exists(runtime_path)) {
@@ -103,7 +108,6 @@ DWORD WINAPI SelauraRuntimeLoaderProc() {
 
         SuspendThread(mc_thread_handle);
 
-        auto* ctx = new selaura::runtime_context;
         ctx->thread_id = mc_thread_id;
 
         DWORD handle = 0;
@@ -131,6 +135,81 @@ DWORD WINAPI SelauraRuntimeLoaderProc() {
         runtime_init(ctx, load_mods);
 
         ResumeThread(mc_thread_handle);
+    }
+
+    HWND hwnd = nullptr;
+    DWORD pid = GetCurrentProcessId();
+
+    while (!hwnd) {
+        EnumWindows([](HWND h, LPARAM lParam) -> BOOL {
+            DWORD windowPid;
+            GetWindowThreadProcessId(h, &windowPid);
+            if (windowPid == GetCurrentProcessId() && GetParent(h) == nullptr && IsWindowVisible(h)) {
+                *reinterpret_cast<HWND*>(lParam) = h;
+                return FALSE;
+            }
+            return TRUE;
+        }, (LPARAM)&hwnd);
+
+        if (!hwnd)
+            Sleep(100);
+    }
+
+    auto find_game_window = []() -> HWND {
+        HWND found = nullptr;
+        DWORD myPid = GetCurrentProcessId();
+
+        EnumWindows([](HWND h, LPARAM lParam) -> BOOL {
+            DWORD windowPid;
+            GetWindowThreadProcessId(h, &windowPid);
+            if (windowPid == GetCurrentProcessId() && GetParent(h) == nullptr && IsWindowVisible(h)) {
+                wchar_t className[256];
+                GetClassNameW(h, className, 256);
+
+                if (wcscmp(className, L"ConsoleWindowClass") == 0)
+                    return TRUE;
+
+                *reinterpret_cast<HWND*>(lParam) = h;
+                return FALSE;
+            }
+            return TRUE;
+        }, (LPARAM)&found);
+
+        return found;
+    };
+
+    hwnd = find_game_window();
+    int tries = 0;
+    while (!hwnd && tries < 50) {
+        Sleep(100);
+        hwnd = find_game_window();
+        tries++;
+    }
+
+    if (!hwnd) {
+        std::println("[Selaura Runtime Loader] Failed to find game window.");
+    } else {
+        std::println("[Selaura Runtime Loader] Found game window: 0x{:X}", (uintptr_t)hwnd);
+
+        // apply immersive dark mode if available
+        BOOL value_true = TRUE;
+        (void)DwmSetWindowAttribute(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &value_true, sizeof(value_true));
+
+        std::string title = std::format("Selaura Runtime ({}.{}.{}/{})",
+            ctx->version_major,
+            ctx->version_minor,
+            ctx->version_build,
+            GIT_BRANCH
+        );
+
+        char className[256];
+        GetClassNameA(hwnd, className, 256);
+        std::println("[Selaura Runtime Loader] Window class: {}", className);
+
+        SetWindowTextA(hwnd, title.c_str());
+        RedrawWindow(hwnd, nullptr, nullptr, RDW_INVALIDATE | RDW_FRAME | RDW_UPDATENOW | RDW_ERASE);
+        SetWindowPos(hwnd, nullptr, 0, 0, 0, 0,
+                    SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
     }
 
     while (true) {

@@ -31,4 +31,5 @@ target_link_libraries(selaura_proxy PRIVATE
         magic_enum::magic_enum
         runtimeobject.lib
         version.lib
+        Dwmapi.lib
 )

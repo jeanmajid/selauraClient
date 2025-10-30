@@ -47,6 +47,15 @@ add_compile_definitions(
         CLIENT_VERSION=\"${CLIENT_VERSION}\"
 )
 
+execute_process(
+        COMMAND git rev-parse --abbrev-ref HEAD
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE GIT_BRANCH
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+add_compile_definitions(GIT_BRANCH="${GIT_BRANCH}")
+
 add_subdirectory(include)
 add_subdirectory(src)
 add_subdirectory(src-proxy)
