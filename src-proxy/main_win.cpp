@@ -195,10 +195,11 @@ DWORD WINAPI SelauraRuntimeLoaderProc() {
         BOOL value_true = TRUE;
         (void)DwmSetWindowAttribute(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &value_true, sizeof(value_true));
 
-        std::string title = std::format("Selaura Runtime ({}.{}.{}/{})",
+        std::string title = std::format("Selaura Runtime ({}.{}.{}/{}-{})",
             ctx->version_major,
             ctx->version_minor,
             ctx->version_build,
+            RUNTIME_VERSION,
             GIT_BRANCH
         );
 

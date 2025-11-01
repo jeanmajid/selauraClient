@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CLIENT_VERSION "0.40")
+set(RUNTIME_VERSION "0.10")
 
 if (WIN32)
     add_compile_definitions(SELAURA_WINDOWS)
@@ -44,7 +44,7 @@ if (MSVC AND CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 add_compile_definitions(
-        CLIENT_VERSION=\"${CLIENT_VERSION}\"
+        RUNTIME_VERSION=\"${RUNTIME_VERSION}\"
 )
 
 execute_process(

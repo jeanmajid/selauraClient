@@ -11,12 +11,20 @@
 
 #include <event/events.hpp>
 
+#include "spdlog/sinks/basic_file_sink-inl.h"
+
 SafetyHookInline Minecraft_$ctor_hk;
 SafetyHookInline ClientInstance_$ctor_hk;
 SafetyHookInline ScreenView_setupAndRender_hk;
 
-Minecraft* Minecraft::$ctor(void *app, void *gameCallbacks, void *allowList, void *permissionsFile, void *filePathManager, void *maxPlayerIdleTime, void *eventing, void *network, void *packetSender, void *clientSubId, void *simTimer, void *realTimer, void *contentTierManager, void *serverMetrics) {
-    auto rt = Minecraft_$ctor_hk.thiscall<Minecraft*>(this, app, gameCallbacks, allowList, permissionsFile, filePathManager, maxPlayerIdleTime, eventing, network, packetSender, clientSubId, simTimer, realTimer, contentTierManager, serverMetrics);
+Minecraft *Minecraft::$ctor(void *app, void *gameCallbacks, void *allowList, void *permissionsFile,
+                            void *filePathManager, void *maxPlayerIdleTime, void *eventing, void *network,
+                            void *packetSender, void *clientSubId, void *simTimer, void *realTimer,
+                            void *contentTierManager, void *serverMetrics) {
+    auto rt = Minecraft_$ctor_hk.thiscall<Minecraft *>(this, app, gameCallbacks, allowList, permissionsFile,
+                                                       filePathManager, maxPlayerIdleTime, eventing, network,
+                                                       packetSender, clientSubId, simTimer, realTimer,
+                                                       contentTierManager, serverMetrics);
 
     if (selaura::runtime_instance->client_ctx->mMinecraft == nullptr) {
         selaura::runtime_instance->client_ctx->mMinecraft = rt;
@@ -28,8 +36,8 @@ Minecraft* Minecraft::$ctor(void *app, void *gameCallbacks, void *allowList, voi
     return rt;
 };
 
-void* ClientInstance::$ctor(void *a1, void *a2, void *a3, void *a4, void *a5, void *a6, void *a7, void *a8, void *a9) {
-    auto rt = ClientInstance_$ctor_hk.thiscall<void*>(this, a1, a2, a3, a4, a5, a6, a7, a8, a9);
+void *ClientInstance::$ctor(void *a1, void *a2, void *a3, void *a4, void *a5, void *a6, void *a7, void *a8, void *a9) {
+    auto rt = ClientInstance_$ctor_hk.thiscall<void *>(this, a1, a2, a3, a4, a5, a6, a7, a8, a9);
     selaura::runtime_instance->client_ctx->mClientInstance = this;
     return rt;
 }
@@ -41,7 +49,7 @@ void ScreenView::setupAndRender_hk(MinecraftUIRenderContext *ctx) {
 
     selaura::runtime_instance->event_manager->post(before_ev);
 
-    return ScreenView_setupAndRender_hk.thiscall<void>(this, ctx);
+    ScreenView_setupAndRender_hk.thiscall<void>(this, ctx);
 
     selaura::AfterSetupAndRenderEvent after_ev{};
     after_ev.mScreenView = this;
@@ -49,7 +57,6 @@ void ScreenView::setupAndRender_hk(MinecraftUIRenderContext *ctx) {
 
     selaura::runtime_instance->event_manager->post(after_ev);
 }
-
 
 void selaura::init_hooks() {
     /*Minecraft_$ctor_hk = safetyhook::create_inline(
@@ -60,10 +67,13 @@ void selaura::init_hooks() {
     ClientInstance_$ctor_hk = safetyhook::create_inline(
         find_signature<"48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2">(),
         abi::mpf_to_fn(&ClientInstance::$ctor)
-    );
+    );*/
+
+    auto begin = find_signature<"E8 ? ? ? ? 48 8B 4B ? 48 85 C9 74 ? 48 8B 01 48 8B D7 48 8B 40 ? FF 15 ? ? ? ? 90">();
+    auto final_address = reinterpret_cast<uintptr_t>(begin) + 5 + *(int32_t *) (reinterpret_cast<uintptr_t>(begin) + 1);
 
     ScreenView_setupAndRender_hk = safetyhook::create_inline(
-        find_signature<"48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA">(),
+        final_address,
         abi::mpf_to_fn(&ScreenView::setupAndRender_hk)
-    );*/
+    );
 }

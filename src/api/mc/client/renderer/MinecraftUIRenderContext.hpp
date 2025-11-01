@@ -91,9 +91,12 @@ namespace ui {
     class TextAlignment;
 };
 
+class ScreenContext;
+
 class MinecraftUIRenderContext {
 public:
     ClientInstance* mClientInstance;
+    ScreenContext* mScreenContext;
 public:
     MinecraftUIRenderContext(ClientInstance& client, void* screenContext, void* currentScene);
     virtual ~MinecraftUIRenderContext();
@@ -108,6 +111,8 @@ public:
     virtual void flushImages(const mce::Color& color, float alpha, const HashedString& materialNameHash);
     virtual void beginSharedMeshBatch(ComponentRenderBatch& renderBatch);
     virtual void endSharedMeshBatch(ComponentRenderBatch& renderBatch);
+    virtual void reserveSharedMeshBatch(uint64_t);
+    virtual uint64_t getSharedMeshBatchVertexCount();
     virtual void drawRectangle(const RectangleArea& rect, const mce::Color& color, float alpha, int thickness);
     virtual void fillRectangle(const RectangleArea& rect, const mce::Color& color, float alpha);
     virtual void increaseStencilRef();

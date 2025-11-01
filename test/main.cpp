@@ -12,7 +12,7 @@ BOOL APIENTRY DllMain(HINSTANCE, DWORD, LPVOID) {
     return TRUE;
 }
 
-void before_ui(selaura::BeforeSetupAndRenderEvent& ev) {
+void after_ui(selaura::AfterSetupAndRenderEvent& ev) {
     selaura::mcuirc ctx(ev.mCtx);
     ctx.fill_rect({350, 170}, {50, 50}, {255, 0, 0, 1});
     ctx.stroke_rect({350, 250}, {50, 50}, {0, 255, 255, 1}, 10);
@@ -21,5 +21,5 @@ void before_ui(selaura::BeforeSetupAndRenderEvent& ev) {
 }
 
 SELAURA_API void SelauraPluginInit(selaura::runtime* runtime) {
-    runtime->event_manager->subscribe(&before_ui);
+    runtime->event_manager->subscribe(&after_ui);
 }

@@ -20,7 +20,7 @@ target_include_directories(selaura_test_mod PRIVATE
 )
 
 target_link_libraries(selaura_test_mod PRIVATE
-        selaura_client
+        selaura_runtime
         EnTT::EnTT
         spdlog
         libhat
