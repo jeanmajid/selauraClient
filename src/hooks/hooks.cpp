@@ -69,11 +69,8 @@ void selaura::init_hooks() {
         abi::mpf_to_fn(&ClientInstance::$ctor)
     );*/
 
-    auto begin = find_signature<"E8 ? ? ? ? 48 8B 4B ? 48 85 C9 74 ? 48 8B 01 48 8B D7 48 8B 40 ? FF 15 ? ? ? ? 90">();
-    auto final_address = reinterpret_cast<uintptr_t>(begin) + 5 + *(int32_t *) (reinterpret_cast<uintptr_t>(begin) + 1);
-
     ScreenView_setupAndRender_hk = safetyhook::create_inline(
-        final_address,
+        find_signature<"48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 BC 24 ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA">(),
         abi::mpf_to_fn(&ScreenView::setupAndRender_hk)
     );
 }
