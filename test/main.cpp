@@ -12,7 +12,7 @@ BOOL APIENTRY DllMain(HINSTANCE, DWORD, LPVOID) {
     return TRUE;
 }
 
-void after_ui(selaura::AfterSetupAndRenderEvent& ev) {
+void after_ui(selaura::SetupAndRenderEvent<selaura::event_phase::post>& ev) {
     selaura::mcuirc ctx(ev.mCtx);
     ctx.fill_rect({350, 170}, {50, 50}, {255, 0, 0, 1});
     ctx.stroke_rect({350, 250}, {50, 50}, {0, 255, 255, 1}, 10);

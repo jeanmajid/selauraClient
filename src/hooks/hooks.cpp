@@ -43,7 +43,7 @@ void *ClientInstance::$ctor(void *a1, void *a2, void *a3, void *a4, void *a5, vo
 }
 
 void ScreenView::setupAndRender_hk(MinecraftUIRenderContext *ctx) {
-    selaura::BeforeSetupAndRenderEvent before_ev{};
+    selaura::SetupAndRenderEvent<selaura::event_phase::pre> before_ev{};
     before_ev.mScreenView = this;
     before_ev.mCtx = ctx;
 
@@ -51,7 +51,7 @@ void ScreenView::setupAndRender_hk(MinecraftUIRenderContext *ctx) {
 
     ScreenView_setupAndRender_hk.thiscall<void>(this, ctx);
 
-    selaura::AfterSetupAndRenderEvent after_ev{};
+    selaura::SetupAndRenderEvent<selaura::event_phase::post> after_ev{};
     after_ev.mScreenView = this;
     after_ev.mCtx = ctx;
 

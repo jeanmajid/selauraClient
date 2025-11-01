@@ -8,6 +8,10 @@
 #include <memory>
 
 namespace selaura {
+    enum event_phase {
+        pre = 0,
+        post = 1
+    };
 
     struct event {
         event() = default;
