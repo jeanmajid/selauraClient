@@ -4,6 +4,7 @@
 #include <gsl/gsl>
 
 #include <api/mc/client/ClientInstance.hpp>
+#include <api/mc/client/renderer/ScreenContext.hpp>
 
 #pragma pack(push, 4)
 struct RectangleArea {
@@ -90,8 +91,6 @@ class CaretMeasureData;
 namespace ui {
     class TextAlignment;
 };
-
-class ScreenContext;
 
 class MinecraftUIRenderContext {
 public:

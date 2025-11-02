@@ -7,15 +7,17 @@
 
 #include <event/events.hpp>
 #include <api/helpers/mcuirc.hpp>
+#include <api/mc/client/renderer/MeshHelpers.hpp>
 
 BOOL APIENTRY DllMain(HINSTANCE, DWORD, LPVOID) {
     return TRUE;
 }
 
 void after_ui(selaura::SetupAndRenderEvent<selaura::event_phase::post>& ev) {
-    selaura::mcuirc ctx(ev.mCtx);
-    ctx.fill_rect({350, 170}, {50, 50}, {255, 0, 0, 1});
-    ctx.stroke_rect({350, 250}, {50, 50}, {0, 255, 255, 1}, 10);
+    auto scrn = ev.mCtx->mScreenContext;
+    scrn->tessellator->begin(mce::PrimitiveMode::LineStrip, 1);
+    scrn->tessellator->color(1.f, 1.f, 1.f, 1.f);
+    scrn->tessellator->vertex(0, 0, 0);
 
     //ev.mCtx->mClientInstance->mGuiData->displayLocalMessage("this is from a plugin!");
 }
