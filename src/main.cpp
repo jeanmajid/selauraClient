@@ -10,9 +10,9 @@ BOOL APIENTRY DllMain(HINSTANCE, DWORD, LPVOID) {
 #include <print>
 #include "runtime.hpp"
 
-SELAURA_API void SelauraRuntimeInit(selaura::runtime_context* ctx, std::function<void(selaura::runtime*)> load_mods) {
-    selaura::runtime_instance = std::make_unique<selaura::runtime>(*ctx);
-    selaura::runtime_instance->start();
+SELAURA_API void SelauraRuntimeInit(Selaura::RuntimeContext* ctx, std::function<void(Selaura::Runtime*)> load_mods) {
+    Selaura::RuntimeInstance = std::make_unique<Selaura::Runtime>(*ctx);
+    Selaura::RuntimeInstance->start();
 
-    load_mods(selaura::runtime_instance.get());
+    load_mods(Selaura::RuntimeInstance.get());
 }

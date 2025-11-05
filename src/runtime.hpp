@@ -5,23 +5,22 @@
 #include "context.hpp"
 #include <event/event_manager.hpp>
 
-namespace selaura {
-    struct runtime {
-        std::thread::id thread_id;
-        std::optional<std::thread::id> mc_client_thread;
-        std::optional<std::thread::id> mc_server_thread;
+namespace Selaura {
+    struct Runtime {
+        std::thread::id mThreadId;
+        std::optional<std::thread::id> mClientThread;
+        std::optional<std::thread::id> mServerThread;
 
-        std::unique_ptr<client_context> client_ctx;
-        std::unique_ptr<server_context> server_ctx;
+        std::unique_ptr<ClientContext> mClientCtx;
+        std::unique_ptr<ServerContext> mServerCtx;
 
-        std::unique_ptr<event_manager> event_manager;
+        std::unique_ptr<EventManager> mEventManager;
 
-        runtime(const runtime_context& ctx);
+        Runtime(const RuntimeContext& ctx);
         void start();
 
-        bool unload = false;
-        bool ready = false;
+        bool mUnload = false;
     };
 
-    inline std::shared_ptr<runtime> runtime_instance;
+    inline std::shared_ptr<Runtime> RuntimeInstance;
 };

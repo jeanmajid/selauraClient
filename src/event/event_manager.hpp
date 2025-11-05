@@ -7,33 +7,33 @@
 #include <concepts>
 #include <memory>
 
-namespace selaura {
-    enum event_phase {
-        pre = 0,
-        post = 1
+namespace Selaura {
+    enum EventPhase {
+        Pre = 0,
+        Post = 1
     };
 
-    struct event {
-        event() = default;
-        virtual ~event() = default;
+    struct Event {
+        Event() = default;
+        virtual ~Event() = default;
     };
 
-    struct cancelable_event : event {
-        void cancel() { cancelled = true; }
-        bool is_cancelled() const { return cancelled; }
+    struct CancelableEvent : Event {
+        void Cancel() { mCancelled = true; }
+        bool IsCancelled() const { return mCancelled; }
     private:
-        bool cancelled = false;
+        bool mCancelled = false;
     };
 
-    class event_manager {
+    class EventManager {
     public:
         using listener_id = std::size_t;
 
-        event_manager() = default;
-        ~event_manager() = default;
+        EventManager() = default;
+        ~EventManager() = default;
 
-        event_manager(const event_manager&) = delete;
-        event_manager& operator=(const event_manager&) = delete;
+        EventManager(const EventManager&) = delete;
+        EventManager& operator=(const EventManager&) = delete;
 
         template <typename T>
         listener_id subscribe(std::function<void(T&)> fn) {
@@ -75,8 +75,8 @@ namespace selaura {
 
             for (auto& [id, fn] : snapshot) {
                 fn(e);
-                if constexpr (std::derived_from<T, cancelable_event>)
-                    if (e.is_cancelled())
+                if constexpr (std::derived_from<T, CancelableEvent>)
+                    if (e.IsCancelled())
                         break;
             }
         }

@@ -4,25 +4,25 @@
 #include <api/mc/world/Minecraft.hpp>
 #include <api/mc/client/ClientInstance.hpp>
 
-namespace selaura {
-    struct shared_context {
+namespace Selaura {
+    struct SharedContext {
         Minecraft* mMinecraft;
     };
 
-    struct client_context : shared_context {
+    struct ClientContext : SharedContext {
         ClientInstance* mClientInstance;
     };
 
-    struct server_context : shared_context {};
+    struct ServerContext : SharedContext {};
 
-    struct runtime_context {
+    struct RuntimeContext {
         std::thread::id thread_id;
         int version_major;
         int version_minor;
         int version_build;
         int version_revision;
 
-        client_context* client_ctx;
-        server_context* server_ctx;
+        ClientContext* client_ctx;
+        ServerContext* server_ctx;
     };
 };

@@ -1,5 +1,5 @@
 #pragma once
 
-namespace selaura {
-    void init_hooks();
+namespace Selaura {
+    void InitHooks();
 };

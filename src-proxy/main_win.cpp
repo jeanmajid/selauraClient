@@ -51,14 +51,14 @@ DWORD WINAPI SelauraRuntimeLoaderProc() {
     }
 
 
-    auto* ctx = new selaura::runtime_context;
+    auto* ctx = new Selaura::RuntimeContext;
 
     const auto runtime_path = folder / "selaura_runtime.dll";
     if (!std::filesystem::exists(runtime_path)) {
         std::println("\x1b[91m[Selaura Runtime Loader] ERROR: '{}' not found. The runtime is required.\x1b[0m",
                      runtime_path.string());
     } else {
-        std::function<void(selaura::runtime*)> load_mods = [=](selaura::runtime* rt) {
+        std::function<void(Selaura::Runtime*)> load_mods = [=](Selaura::Runtime* rt) {
             // To load mods we need LoadLibrary, and other Windows-specific
             // functions, and this will be called in the runtime. However,
             // due to the goal of cross-platform, the function must be
@@ -73,7 +73,7 @@ DWORD WINAPI SelauraRuntimeLoaderProc() {
 
             int plugins_loaded = 0;
 
-            using init_fn = void(*)(selaura::runtime*);
+            using init_fn = void(*)(Selaura::Runtime*);
             std::vector<init_fn> init_fn_list = {};
 
             for (const auto& entry : std::filesystem::directory_iterator(mods_folder)) {
@@ -130,7 +130,7 @@ DWORD WINAPI SelauraRuntimeLoaderProc() {
         }
 
         HMODULE mod = LoadLibraryExW((folder / "selaura_runtime.dll").c_str(), nullptr, 0);
-        using runtime_init_fn = void(*)(selaura::runtime_context*, std::function<void(selaura::runtime*)>);
+        using runtime_init_fn = void(*)(Selaura::RuntimeContext*, std::function<void(Selaura::Runtime*)>);
         auto runtime_init = reinterpret_cast<runtime_init_fn>(GetProcAddress(mod, "SelauraRuntimeInit"));
         runtime_init(ctx, load_mods);
 
